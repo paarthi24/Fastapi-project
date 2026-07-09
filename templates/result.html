@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Resume Analysis Result</title>
+
+    <link rel="stylesheet" href="/static/css/style.css">
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>🎯 Resume Analysis Result</h1>
+
+    <hr>
+
+    <h2>Candidate Details</h2>
+
+    <p><strong>Name:</strong> {{ candidate_name }}</p>
+    <p><strong>Email:</strong> {{ candidate_email }}</p>
+    <p><strong>Education:</strong> {{ education }}</p>
+
+    <hr>
+
+    <h2>Job Requirements</h2>
+
+    <p><strong>Qualification:</strong> {{ required_qualification }}</p>
+    <p><strong>Experience:</strong> {{ required_experience }}</p>
+
+    <hr>
+
+    <h2>ATS Score</h2>
+
+    <h1 style="color:green;">
+        {{ ats_score }}%
+    </h1>
+
+    <h2>Match Percentage</h2>
+
+    <h1 style="color:blue;">
+        {{ match_percentage }}%
+    </h1>
+
+    <hr>
+
+    <h2>📊 Resume Analysis Chart</h2>
+
+    <canvas id="scoreChart"></canvas>
+
+    <hr>
+
+    <h2>Matched Skills</h2>
+
+    <ul>
+        {% for skill in matched_skills %}
+            <li>✅ {{ skill }}</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <h2>Missing Skills</h2>
+
+    <ul>
+        {% for skill in missing_skills %}
+            <li>❌ {{ skill }}</li>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <h2>Feedback</h2>
+
+    <ul>
+        {% for item in feedback %}
+        <li>
+            <strong>{{ item.skill }}</strong><br>
+            {{ item.suggestion }}
+        </li>
+        <br>
+        {% endfor %}
+    </ul>
+
+    <hr>
+
+    <h2>Final Decision</h2>
+
+    <h1>{{ decision }}</h1>
+
+    <p><strong>Confidence:</strong> {{ confidence }}</p>
+
+    <p><strong>Reason:</strong> {{ reason }}</p>
+
+    <br>
+
+    {% if pdf_available %}
+
+<a href="/download-report">
+    <button style="margin-bottom:15px;">
+        📄 Download PDF Report
+    </button>
+</a>
+
+{% endif %}
+
+<a href="/">
+    <button>
+        Analyze Another Resume
+    </button>
+</a>
+
+</div>
+
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const ctx = document.getElementById("scoreChart").getContext("2d");
+
+new Chart(ctx, {
+
+    type: "bar",
+
+    data: {
+
+        labels: [
+
+            "ATS Score",
+
+            "Match Percentage"
+
+        ],
+
+        datasets: [
+
+            {
+
+                label: "Score (%)",
+
+                data: [
+
+                    {{ ats_score }},
+
+                    {{ match_percentage }}
+
+                ],
+
+                backgroundColor: [
+
+                    "#28a745",
+
+                    "#007bff"
+
+                ],
+
+                borderColor: [
+
+                    "#1e7e34",
+
+                    "#0056b3"
+
+                ],
+
+                borderWidth: 2
+
+            }
+
+        ]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        plugins: {
+
+            legend: {
+
+                display: false
+
+            },
+
+            title: {
+
+                display: true,
+
+                text: "Resume Analysis Scores"
+
+            }
+
+        },
+
+        scales: {
+
+            y: {
+
+                beginAtZero: true,
+
+                max: 100,
+
+                ticks: {
+
+                    stepSize: 10
+
+                }
+
+            }
+
+        }
+
+    }
+
+});
+
+</script>
+
+</body>
+
+</html>
